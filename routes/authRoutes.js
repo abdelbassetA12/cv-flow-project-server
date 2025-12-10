@@ -353,12 +353,22 @@ router.post(
       const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '7d' });
 
       // 🔥 وضع التوكن داخل كوكي آمنة
+      /*
       res.cookie("token", token, {
         httpOnly: true,      // لا يمكن قراءته من JS
         secure: false,       // إذا عندك HTTPS اجعلها true
         sameSite: "strict",  // حماية من CSRF
         maxAge: 7 * 24 * 60 * 60 * 1000 // أسبوع
       });
+      */
+
+      res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,       // لأن Render يستخدم HTTPS
+    sameSite: "none",   // لإرسال الكوكي بين دومينات مختلفة
+    maxAge: 7 * 24 * 60 * 60 * 1000
+});
+
 
       // 🔥 إرجاع بيانات المستخدم فقط — بدون أي توكن
       res.json({
@@ -477,10 +487,18 @@ router.post('/reset-password',validate(resetPasswordValidator), async (req, res)
 router.post('/logout', (req, res) => {
   res.clearCookie("token" ,
     {
+      /*
     httpOnly: true,
     sameSite: "strict",
     secure: false
+*/
+    httpOnly: true,
+    secure: true,
+    sameSite: "none"
   }
+
+ 
+
   ); // ❗ نفس اسم الكوكي تمامًا
   return res.json({ message: "تم تسجيل الخروج" });
 });
