@@ -38,7 +38,12 @@ const cookieParser = require("cookie-parser");
 
 
 const app = express();
-const PORT = process.env.PORT ;
+
+// حل مشكلة Render + express-rate-limit
+app.set('trust proxy', 1);
+
+const PORT = process.env.PORT || 5000;
+
 
 /*
 
@@ -126,7 +131,8 @@ app.use(cors({
   credentials: true
 }));
 */
-
+// قبل 
+/*
 app.use(cors({
  origin: [process.env.CLIENT_URL, process.env.ADMIN_URL],
 credentials: true
@@ -134,6 +140,19 @@ credentials: true
  
 }));
 
+*/
+
+app.use(cors({
+  origin: (origin, callback) => {
+    const allowed = [process.env.CLIENT_URL, process.env.ADMIN_URL];
+    if (!origin || allowed.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
 
 
 
