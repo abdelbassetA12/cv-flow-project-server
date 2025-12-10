@@ -1,0 +1,36 @@
+{
+  "background": "#ffffff",
+  "objects": [
+    { "type": "rect", "left": 0, "top": 0, "width": 793, "height": 1122, "fill": "#ffffff" },
+
+    { "type": "rect", "left": 0, "top": 0, "width": 290, "height": 1122, "fill": "#f1f1f1" },
+
+    { "type": "rect", "left": 290, "top": 0, "width": 503, "height": 220, "fill": "#2c2c35" },
+
+    { "type": "circle", "left": 90, "top": 70, "radius": 85, "fill": "#ffffff", "stroke": "#555", "strokeWidth": 2 },
+
+    { "type": "i-text", "left": 340, "top": 70, "text": "Richard", "fontSize": 50, "fontWeight": "bold", "fill": "#ffffff", "fontFamily": "Montserrat" },
+    { "type": "i-text", "left": 340, "top": 130, "text": "Sanchez", "fontSize": 36, "fill": "#d1d1d6", "fontFamily": "Montserrat" },
+    { "type": "textbox", "left": 340, "top": 180, "text": "Graphics Designer", "fontSize": 20, "fill": "#e6e6e9", "fontFamily": "Montserrat" },
+
+    { "type": "i-text", "left": 40, "top": 280, "text": "ABOUT ME", "fontSize": 22, "fontWeight": "bold", "fill": "#2c3e50", "fontFamily": "Montserrat" },
+    { "type": "i-text", "left": 40, "top": 320, "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pharetra urna at luctus.", "fontSize": 15, "fill": "#555555", "width": 210, "lineHeight": 1.6, "fontFamily": "Montserrat" },
+
+    { "type": "i-text", "left": 40, "top": 420, "text": "CONTACT", "fontSize": 22, "fontWeight": "bold", "fill": "#2c3e50", "fontFamily": "Montserrat" },
+    { "type": "i-text", "left": 40, "top": 460, "text": "📞 +123-456-7890\n📧 hello@reallygreatsite.com\n📍 123 Anywhere Street, Any City", "fontSize": 15, "fill": "#555555", "width": 210, "lineHeight": 1.6, "fontFamily": "Montserrat" },
+
+    { "type": "i-text", "left": 40, "top": 580, "text": "SKILLS", "fontSize": 22, "fontWeight": "bold", "fill": "#2c3e50", "fontFamily": "Montserrat" },
+    { "type": "i-text", "left": 40, "top": 620, "text": "• Web Design\n• Branding\n• Graphic Design\n• SEO\n• Marketing", "fontSize": 15, "fill": "#555555", "lineHeight": 1.6, "fontFamily": "Montserrat" },
+
+    { "type": "i-text", "left": 40, "top": 760, "text": "LANGUAGE", "fontSize": 22, "fontWeight": "bold", "fill": "#2c3e50", "fontFamily": "Montserrat" },
+    { "type": "i-text", "left": 40, "top": 800, "text": "• English\n• French", "fontSize": 15, "fill": "#555555", "lineHeight": 1.6, "fontFamily": "Montserrat" },
+
+    { "type": "i-text", "left": 330, "top": 270, "text": "EDUCATION", "fontSize": 22, "fontWeight": "bold", "fill": "#2c3e50", "fontFamily": "Montserrat" },
+    { "type": "i-text", "left": 330, "top": 310, "text": "(2011–2016)\nWARDERIE UNIVERSITY\nBachelor of Design\nGPA: 3.85", "fontSize": 15, "fill": "#555555", "width": 420, "lineHeight": 1.6, "fontFamily": "Montserrat" },
+    { "type": "i-text", "left": 330, "top": 410, "text": "(2014–2019)\nWARDERIE UNIVERSITY\nBachelor of Design\nGPA: 3.74", "fontSize": 15, "fill": "#555555", "width": 420, "lineHeight": 1.6, "fontFamily": "Montserrat" },
+
+    { "type": "i-text", "left": 330, "top": 520, "text": "EXPERIENCE", "fontSize": 22, "fontWeight": "bold", "fill": "#2c3e50", "fontFamily": "Montserrat" },
+    { "type": "i-text", "left": 330, "top": 560, "text": "(2020–2025)\nSENIOR GRAPHIC DESIGNER – Studio X\n• Created more than 100 designs for major companies\n• Completed complex design projects", "fontSize": 15, "fill": "#555555", "width": 420, "lineHeight": 1.6, "fontFamily": "Montserrat" },
+    { "type": "i-text", "left": 330, "top": 700, "text": "(2017–2019)\nSENIOR GRAPHIC DESIGNER – Studio Z\n• Designed for top firms\n• Completed challenging creative tasks", "fontSize": 15, "fill": "#555555", "width": 420, "lineHeight": 1.6, "fontFamily": "Montserrat" }
+  ]
+}

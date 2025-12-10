@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>السيرة الذاتية - سميرة جديد</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: #f0eef7;
+      padding: 20px;
+    }
+
+   .cv {
+      display: flex;
+      flex-direction: row;
+      width: 210mm;
+      height: 297mm;
+      background: white;
+      margin: 20px auto;
+      overflow: hidden;
+    }
+
+    .cv aside {
+      width: 35%;
+      background: #924f97;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cv aside img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 4px solid #fff;
+    }
+
+    .cv aside h2 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .cv aside p {
+      font-size: 14px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .cv aside .section {
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .cv aside .section h3 {
+      font-size: 16px;
+      border-bottom: 1px solid #fff;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+
+    .cv aside .section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .cv aside .section ul li {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .cv main {
+      width: 65%;
+      padding: 20px;
+      background: #fff;
+    }
+
+    .cv main .summary {
+      background: #f8f2fb;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .cv main h3 {
+      color: #924f97;
+      margin: 15px 0 10px;
+      font-size: 18px;
+    }
+
+    .cv main .section {
+      margin-bottom: 20px;
+    }
+
+    .cv main .section div {
+      margin-bottom: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .qr {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .qr img {
+      width: 100px;
+    }
+
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #924f97;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #7b3f80;
+    }
+
+    .draggable {
+      cursor: move;
+      border: 1px dashed transparent;
+      transition: border 0.3s ease;
+    }
+
+    .draggable:focus-within {
+      border: 1px dashed #924f97;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cv" id="cv">
+    <aside>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2BBaOYv-svLAnXsyI1gOX1aTJVwyAaTqr6A&s" alt="صورة شخصية">
+      <h2 contenteditable="true">سميرة جديد</h2>
+      <p contenteditable="true">مصممة جرافيك</p>
+
+      <div class="section">
+        <h3>معلومات الاتصال</h3>
+        <ul>
+          <li contenteditable="true">example@mail.com</li>
+          <li contenteditable="true">+212 600 000 000</li>
+          <li contenteditable="true">الرباط، المغرب</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h3>اللغات</h3>
+        <ul>
+          <li contenteditable="true">العربية - ممتاز</li>
+          <li contenteditable="true">الفرنسية - جيد جدًا</li>
+          <li contenteditable="true">الإنجليزية - متوسط</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h3>الدورات التدريبية</h3>
+        <ul>
+          <li contenteditable="true">دورة تصميم UX/UI</li>
+          <li contenteditable="true">ورشة Adobe Illustrator</li>
+        </ul>
+      </div>
+
+      <div class="qr">
+        <img src="https://via.placeholder.com/100x100" alt="QR Code">
+        <p style="font-size: 12px;">ملف أعمالي</p>
+      </div>
+    </aside>
+
+    <main>
+      <div class="summary draggable" draggable="true" contenteditable="true">
+        مبدعة في تصميم الجرافيك بخبرة تزيد عن 5 سنوات في إنشاء الهويات البصرية، تصميم الحملات الدعائية والتواصل مع فرق التسويق.
+      </div>
+
+      <div class="section draggable" draggable="true">
+        <h3>المؤهلات العلمية</h3>
+        <div contenteditable="true">
+          جامعة الرباط<br>
+          بكالوريوس تصميم جرافيك - 2016 إلى 2020
+        </div>
+      </div>
+
+      <div class="section draggable" draggable="true">
+        <h3>مشاريع مستقلة</h3>
+        <div contenteditable="true">
+          مشروع تصميم هوية لشركة ناشئة<br>
+          تصميم شعار، بطاقات، كتيبات، والهوية الرقمية
+        </div>
+        <div contenteditable="true">
+          مشروع تصميم مواد إعلانية لمطعم<br>
+          قوائم، لوحات، ومنشورات مواقع التواصل
+        </div>
+      </div>
+
+      <div class="section draggable" draggable="true">
+        <h3>المهارات الاحترافية</h3>
+        <div contenteditable="true">
+          Adobe Photoshop, Illustrator, InDesign, Figma, Canva
+        </div>
+      </div>
+
+      <div class="section draggable" draggable="true">
+        <h3>مراجع</h3>
+        <div contenteditable="true">
+          متاحة عند الطلب
+        </div>
+      </div>
+    </main>
+  </div>
+
+  
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    async function downloadPDF() {
+      const element = document.getElementById("cv");
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true
+      });
+
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      const pageWidth = 210;
+      const pageHeight = 297;
+
+      const imgProps = pdf.getImageProperties(imgData);
+      const imgWidth = pageWidth;
+      const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+      let position = 0;
+      let heightLeft = imgHeight;
+
+      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position -= pageHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save("Samira_Jadid_CV.pdf");
+    }
+
+    interact('.draggable').draggable({
+      listeners: {
+        move(event) {
+          const target = event.target;
+          const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+          const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+          target.style.transform = `translate(${x}px, ${y}px)`;
+          target.setAttribute('data-x', x);
+          target.setAttribute('data-y', y);
+        }
+      }
+    });
+
+    function addNewSection() {
+      const main = document.querySelector('.cv main');
+      const section = document.createElement('div');
+      section.className = 'section draggable';
+      section.setAttribute('draggable', 'true');
+      section.innerHTML = `
+        <h3 contenteditable="true">قسم جديد</h3>
+        <div contenteditable="true">محتوى جديد هنا...</div>
+      `;
+      main.appendChild(section);
+
+      interact(section).draggable({
+        listeners: {
+          move(event) {
+            const target = event.target;
+            const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+            const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+            target.style.transform = `translate(${x}px, ${y}px)`;
+            target.setAttribute('data-x', x);
+            target.setAttribute('data-y', y);
+          }
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
+

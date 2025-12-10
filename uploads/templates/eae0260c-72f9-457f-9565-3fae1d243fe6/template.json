@@ -1,0 +1,152 @@
+{
+  "version": "4.6.0",
+  "objects": [
+    {
+      "type": "path",
+      "version": "4.6.0",
+      "originX": "left",
+      "originY": "top",
+      "left": 100,
+      "top": 100,
+      "width": 254.9,
+      "height": 226.88,
+      "fill": "#ef4444",
+      "stroke": "#000",
+      "strokeWidth": 1,
+      "strokeDashArray": null,
+      "strokeLineCap": "butt",
+      "strokeDashOffset": 0,
+      "strokeLineJoin": "miter",
+      "strokeUniform": false,
+      "strokeMiterLimit": 4,
+      "scaleX": 0.6,
+      "scaleY": 0.6,
+      "angle": 0,
+      "flipX": false,
+      "flipY": false,
+      "opacity": 1,
+      "shadow": null,
+      "visible": true,
+      "backgroundColor": "",
+      "fillRule": "nonzero",
+      "paintFirst": "fill",
+      "globalCompositeOperation": "source-over",
+      "skewX": 0,
+      "skewY": 0,
+      "path": [
+        [
+          "M",
+          272.701,
+          142.227
+        ],
+        [
+          "C",
+          252.533,
+          95.878,
+          178.743,
+          87.307,
+          150,
+          135.125
+        ],
+        [
+          "C",
+          121.257,
+          87.307,
+          47.467,
+          95.878,
+          27.299,
+          142.227
+        ],
+        [
+          "C",
+          3.091,
+          197.24,
+          75.634,
+          258.422,
+          150,
+          330
+        ],
+        [
+          "C",
+          224.366,
+          258.422,
+          296.909,
+          197.24,
+          272.701,
+          142.227
+        ],
+        [
+          "Z"
+        ]
+      ]
+    },
+    {
+      "type": "polygon",
+      "version": "4.6.0",
+      "originX": "left",
+      "originY": "top",
+      "left": 200,
+      "top": 200,
+      "width": 120,
+      "height": 120,
+      "fill": "#34d399",
+      "stroke": "#000",
+      "strokeWidth": 2,
+      "strokeDashArray": null,
+      "strokeLineCap": "butt",
+      "strokeDashOffset": 0,
+      "strokeLineJoin": "miter",
+      "strokeUniform": false,
+      "strokeMiterLimit": 4,
+      "scaleX": 1,
+      "scaleY": 1,
+      "angle": 0,
+      "flipX": false,
+      "flipY": false,
+      "opacity": 1,
+      "shadow": null,
+      "visible": true,
+      "backgroundColor": "",
+      "fillRule": "nonzero",
+      "paintFirst": "fill",
+      "globalCompositeOperation": "source-over",
+      "skewX": 0,
+      "skewY": 0,
+      "points": [
+        {
+          "x": 60,
+          "y": 0
+        },
+        {
+          "x": 42.42640687119285,
+          "y": 42.426406871192846
+        },
+        {
+          "x": 3.67394039744206e-15,
+          "y": 60
+        },
+        {
+          "x": -42.426406871192846,
+          "y": 42.42640687119285
+        },
+        {
+          "x": -60,
+          "y": 7.34788079488412e-15
+        },
+        {
+          "x": -42.42640687119286,
+          "y": -42.426406871192846
+        },
+        {
+          "x": -1.1021821192326178e-14,
+          "y": -60
+        },
+        {
+          "x": 42.42640687119284,
+          "y": -42.42640687119286
+        }
+      ]
+    }
+  ],
+  "background": "#ffffff"
+}

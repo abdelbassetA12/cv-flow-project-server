@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>اختر قالب السيرة الذاتية</title>
+  <style>
+    body { font-family: Arial; background: #f4f4f4; padding: 2rem; }
+    .grid { display: flex; gap: 20px; flex-wrap: wrap; }
+    .card {
+      background: #fff; padding: 1rem; border-radius: 10px;
+      width: 200px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    img { width: 100%; border-radius: 8px; }
+    button {
+      margin-top: 10px; padding: 5px 10px;
+      background: #2196f3; color: white; border: none; border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>اختر قالب السيرة الذاتية</h2>
+  <div class="grid">
+    <div class="card">
+      <img src="thumbnails/template1.png" alt="Template 1" />
+      <h3>القالب 1</h3>
+      <button onclick="location.href='editor.html?template=template1'">استخدم القالب</button>
+    </div>
+    <div class="card">
+      <img src="thumbnails/template2.png" alt="Template 2" />
+      <h3>القالب 2</h3>
+      <button onclick="location.href='editor.html?template=template2'">استخدم القالب</button>
+    </div>
+  </div>
+  <script src="scripts/editor.js"></script>
+</body>
+</html>
