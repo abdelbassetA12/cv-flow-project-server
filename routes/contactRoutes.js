@@ -9,6 +9,7 @@ const router = express.Router();
 
 
 // إعداد nodemailer
+/*
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -16,6 +17,33 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS, // إذا الحساب عليه 2FA استخدم App Password
   },
 });
+*/
+
+const transporter = nodemailer.createTransport({
+  host: process.env.BREVO_HOST,
+  port: parseInt(process.env.BREVO_PORT),
+  auth: {
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_KEY
+  },
+  secure: false, // false عند استخدام 587
+  // tls: { rejectUnauthorized: false } // يمكنك حذفه في الإنتاج
+});
+
+
+// تحقق من الاتصال عند التشغيل
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ SMTP Connection Error:", error);
+  } else {
+    console.log("✅ SMTP Server is ready to take messages");
+  }
+});
+
+
+
+
+
 
 
 
@@ -37,6 +65,14 @@ router.post("/inquiry",validate(inquiryValidator), async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
+
+
+
+
+
+
+
 
 
 
@@ -116,7 +152,9 @@ router.post("/reply/:id", adminMiddleware, async (req, res) => {
 
     // إرسال البريد
     await transporter.sendMail({
-      from: `"CV Generator" <${process.env.EMAIL_USER}>`,
+      //from: `"CV Generator" <${process.env.EMAIL_USER}>`,
+      from: `"CV Generator" <${process.env.BREVO_USER}>`,
+
       to: contact.email,
       subject: "رد على رسالتك",
       html: `

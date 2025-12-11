@@ -12,11 +12,23 @@ const validate = require('../middleware/validate');
 
 
 
+
+
 require('dotenv').config();
 const SERVER_URL = process.env.SERVER_URL;   // السيرفر
 const CLIENT_URL = process.env.CLIENT_URL;   // موقع العملاء
-const ADMIN_URL = process.env.ADMIN_URL;     // لوحة الأدمن
+//const ADMIN_URL = process.env.ADMIN_URL;     // لوحة الأدمن
 
+const transporter = nodemailer.createTransport({
+  host: process.env.BREVO_HOST,
+  port: parseInt(process.env.BREVO_PORT),
+  auth: {
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_KEY
+  },
+  secure: false, // false عند استخدام 587
+  // tls: { rejectUnauthorized: false } // يمكنك حذفه في الإنتاج
+});
 
 
 
@@ -39,7 +51,7 @@ const emailHTML = (username, actionText, actionLink, message) => `
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const router = express.Router();
-
+/*
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -47,6 +59,10 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS
   }
 });
+*/
+
+
+
 
 // 🔸 إنشاء حساب
 /*
@@ -214,7 +230,9 @@ const newStats = await StatsHistory.create({
     const verificationLink = `${SERVER_URL}/api/auth/verify-email?token=${verificationToken}`;
 
     await transporter.sendMail({
-      from: `"CV Generator" <${process.env.EMAIL_USER}>`,
+      //from: `"CV Generator" <${process.env.EMAIL_USER}>`,
+      from: `"CV Generator" <${process.env.BREVO_USER}>`,
+
       to: email,
       subject: 'تأكيد البريد الإلكتروني',
       html: `<p>أهلاً ${username}،</p>
@@ -428,7 +446,9 @@ const resetLink = `${CLIENT_URL}/reset-password?token=${resetToken}`;
 
 // ✨ استخدم البريد المصمم
 await transporter.sendMail({
-  from: `"CV Generator" <${process.env.EMAIL_USER}>`,
+  //from: `"CV Generator" <${process.env.EMAIL_USER}>`,
+  from: `"CV Generator" <${process.env.BREVO_USER}>`,
+
   to: email,
   subject: '🔒 إعادة تعيين كلمة المرور',
   html: emailHTML(user.username, 'إعادة تعيين كلمة المرور', resetLink, 'لقد طلبت إعادة تعيين كلمة المرور. اضغط على الزر أدناه للمتابعة:'),
@@ -581,7 +601,9 @@ router.post('/resend-verification',validate(forgotEmailValidator), async (req, r
     const verificationLink = `${SERVER_URL}/api/auth/verify-email?token=${verificationToken}`;
 
     await transporter.sendMail({
-      from: `"CV Generator" <${process.env.EMAIL_USER}>`,
+      //from: `"CV Generator" <${process.env.EMAIL_USER}>`,
+      from: `"CV Generator" <${process.env.BREVO_USER}>`,
+
       to: email,
       subject: 'إعادة إرسال رابط التفعيل',
       html: `<p>مرحبًا ${user.username}،</p>
@@ -604,8 +626,4 @@ module.exports = router;
 
 
 
-
-
-
-
-
+   
