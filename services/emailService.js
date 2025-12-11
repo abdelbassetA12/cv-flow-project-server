@@ -10,7 +10,7 @@ async function sendEmail(to, subject, text, html = null) {
   const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
   sendSmtpEmail.to = [{ email: to }];
-  sendSmtpEmail.sender = { name: 'CV Generator', email: process.env.BREVO_USER };  // استخدام البريد من ملف .env
+  sendSmtpEmail.sender = { name: 'CV Generator', email:  process.env.EMAIL_USER };  // استخدام البريد من ملف .env
   sendSmtpEmail.subject = subject;
   sendSmtpEmail.textContent = text;
   if (html) sendSmtpEmail.htmlContent = html;
