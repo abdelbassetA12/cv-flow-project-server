@@ -33,14 +33,7 @@ const transporter = nodemailer.createTransport({
 */
 
 
-// تحقق من الاتصال عند التشغيل
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ SMTP Connection Error:", error);
-  } else {
-    console.log("✅ SMTP Server is ready to take messages");
-  }
-});
+
 
 
 
