@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const { sendEmail } = require('../services/emailService');  // استيراد الدالة من emailService.js
 const User = require('../models/User');
 const authMiddleware = require('../middleware/authMiddleware');
 const { updateStatsPeriod } = require("../services/statsService");
@@ -18,7 +19,7 @@ require('dotenv').config();
 const SERVER_URL = process.env.SERVER_URL;   // السيرفر
 const CLIENT_URL = process.env.CLIENT_URL;   // موقع العملاء
 //const ADMIN_URL = process.env.ADMIN_URL;     // لوحة الأدمن
-
+/*
 const transporter = nodemailer.createTransport({
   host: process.env.BREVO_HOST,
   port: parseInt(process.env.BREVO_PORT),
@@ -29,6 +30,7 @@ const transporter = nodemailer.createTransport({
   secure: false, // false عند استخدام 587
   // tls: { rejectUnauthorized: false } // يمكنك حذفه في الإنتاج
 });
+*/
 
 
 
@@ -228,7 +230,7 @@ const newStats = await StatsHistory.create({
 
 
     const verificationLink = `${SERVER_URL}/api/auth/verify-email?token=${verificationToken}`;
-
+/*
     await transporter.sendMail({
       //from: `"CV Generator" <${process.env.EMAIL_USER}>`,
       from: `"CV Generator" <${process.env.BREVO_USER}>`,
@@ -239,6 +241,16 @@ const newStats = await StatsHistory.create({
              <p>يرجى الضغط على الرابط التالي لتفعيل حسابك:</p>
              <a href="${verificationLink}">تأكيد البريد</a>`
     });
+    */
+
+    await sendEmail(
+  email,
+  'تأكيد البريد الإلكتروني',
+  `أهلاً ${username}، يرجى الضغط على الرابط التالي لتفعيل حسابك: ${verificationLink}`,
+  `<p>أهلاً ${username}،</p>
+   <p>يرجى الضغط على الرابط التالي لتفعيل حسابك:</p>
+   <a href="${verificationLink}">تأكيد البريد</a>`
+);
 
     res.status(201).json({ message: '✅ تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتفعيل الحساب.' });
 
@@ -445,6 +457,7 @@ await user.save();
 const resetLink = `${CLIENT_URL}/reset-password?token=${resetToken}`;
 
 // ✨ استخدم البريد المصمم
+/*
 await transporter.sendMail({
   //from: `"CV Generator" <${process.env.EMAIL_USER}>`,
   from: `"CV Generator" <${process.env.BREVO_USER}>`,
@@ -453,6 +466,15 @@ await transporter.sendMail({
   subject: '🔒 إعادة تعيين كلمة المرور',
   html: emailHTML(user.username, 'إعادة تعيين كلمة المرور', resetLink, 'لقد طلبت إعادة تعيين كلمة المرور. اضغط على الزر أدناه للمتابعة:'),
 });
+*/
+
+await sendEmail(
+  email,
+  '🔒 إعادة تعيين كلمة المرور',
+  `لقد طلبت إعادة تعيين كلمة المرور. اضغط على الرابط التالي: ${resetLink}`,
+  emailHTML(user.username, 'إعادة تعيين كلمة المرور', resetLink, 'لقد طلبت إعادة تعيين كلمة المرور. اضغط على الزر أدناه للمتابعة:')
+);
+
 
 
     res.json({ message: ' A password reset link has been sent to your email.📩' });
@@ -599,7 +621,7 @@ router.post('/resend-verification',validate(forgotEmailValidator), async (req, r
     await user.save();
 
     const verificationLink = `${SERVER_URL}/api/auth/verify-email?token=${verificationToken}`;
-
+/*
     await transporter.sendMail({
       //from: `"CV Generator" <${process.env.EMAIL_USER}>`,
       from: `"CV Generator" <${process.env.BREVO_USER}>`,
@@ -610,6 +632,18 @@ router.post('/resend-verification',validate(forgotEmailValidator), async (req, r
              <p>يرجى الضغط على الرابط التالي لتفعيل حسابك:</p>
              <a href="${verificationLink}">تأكيد البريد</a>`
     });
+    */
+
+
+    await sendEmail(
+  email,
+  'إعادة إرسال رابط التفعيل',
+  `مرحبًا ${user.username}، يرجى الضغط على الرابط التالي لتفعيل حسابك: ${verificationLink}`,
+  `<p>مرحبًا ${user.username}،</p>
+   <p>يرجى الضغط على الرابط التالي لتفعيل حسابك:</p>
+   <a href="${verificationLink}">تأكيد البريد</a>`
+);
+
 
     res.json({ message: '📩 تم إرسال رابط التفعيل إلى بريدك الإلكتروني' });
   } catch (err) {
