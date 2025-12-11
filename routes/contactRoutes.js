@@ -4,6 +4,7 @@ const adminMiddleware = require("../middleware/authAdminMiddleware"); // تأك�
 const { inquiryValidator, feedbackValidator } = require("../validators/contactValidator");
 const validate = require('../middleware/validate');
 const nodemailer = require("nodemailer");
+const { sendEmail } = require('../services/emailService');  // استيراد الدالة من emailService.js
 require("dotenv").config();
 const router = express.Router();
 
@@ -18,7 +19,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 */
-
+/*
 const transporter = nodemailer.createTransport({
   host: process.env.BREVO_HOST,
   port: parseInt(process.env.BREVO_PORT),
@@ -29,6 +30,7 @@ const transporter = nodemailer.createTransport({
   secure: false, // false عند استخدام 587
   // tls: { rejectUnauthorized: false } // يمكنك حذفه في الإنتاج
 });
+*/
 
 
 // تحقق من الاتصال عند التشغيل
@@ -60,6 +62,16 @@ router.post("/inquiry",validate(inquiryValidator), async (req, res) => {
 
     const contact = new Contact({ name, email, inquiry: message });
     await contact.save();
+
+     // إرسال البريد الإلكتروني بعد حفظ الاستفسار
+    await sendEmail(
+      email,  // إرسال إلى نفس البريد الذي أرسله
+      'استفسار تم استلامه',
+      `لقد تلقينا استفسارك. شكرًا لك! الرسالة: ${message}`
+    );
+
+
+
     res.json({ success: true, message: "✅ تم إرسال الاستفسار" });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -94,6 +106,17 @@ router.post("/feedback",validate(feedbackValidator), async (req, res) => {
     });
 
     await contact.save();
+
+
+     // إرسال البريد الإلكتروني بعد حفظ الملاحظة
+    await sendEmail(
+      email,  // إرسال إلى نفس البريد الذي أرسله
+      'ملاحظة تم استلامها',
+      `لقد تلقينا ملاحظتك: ${note}`
+    );
+
+
+
     res.json({ success: true, message: "✅ تم إرسال الملاحظة" });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -151,6 +174,7 @@ router.post("/reply/:id", adminMiddleware, async (req, res) => {
     }
 
     // إرسال البريد
+    /*
     await transporter.sendMail({
       //from: `"CV Generator" <${process.env.EMAIL_USER}>`,
       from: `"CV Generator" <${process.env.BREVO_USER}>`,
@@ -168,6 +192,23 @@ router.post("/reply/:id", adminMiddleware, async (req, res) => {
         </div>
       `,
     });
+    */
+
+
+      // إرسال البريد باستخدام Brevo API عبر الدالة sendEmail
+    await sendEmail(
+      contact.email,  // إرسال إلى البريد الذي أدخله المستخدم
+      "رد على رسالتك",
+      `مرحبًا ${contact.name} 👋\n\nلقد تلقينا رسالتك، وإليك رد الأدمن:\n\n${message}`,
+      `<div style="font-family: 'Cairo', sans-serif; direction: rtl; padding: 20px; background: #f8f9fa;">
+         <div style="max-width: 500px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+           <h3>مرحبًا ${contact.name} 👋</h3>
+           <p>لقد تلقينا رسالتك، وإليك رد الأدمن:</p>
+           <p style="background: #f0f0f0; padding: 15px; border-radius: 8px;">${message}</p>
+           <p style="color: #888; font-size: 0.9rem;">إذا لم تطلب ذلك، يمكنك تجاهل هذا البريد بأمان.</p>
+         </div>
+       </div>`
+    );
 
     // ✅ تحديث حالة الرسالة
     contact.reply = message;
