@@ -10,13 +10,23 @@ const router = express.Router();
 
 
 // ==== إعدادات - عدل حسب بيئتك أو ضعها في .env ====
-const KEYFILE_PATH = process.env.GA_KEYFILE || path.join(__dirname, "../config/cv-folow-03800dbe6041.json");
+//const KEYFILE_PATH = process.env.GA_KEYFILE || path.join(__dirname, "../config/cv-folow-03800dbe6041.json");
+// تحميل JSON من متغير البيئة GA_SERVICE_ACCOUNT
+const serviceAccount = JSON.parse(process.env.GA_SERVICE_ACCOUNT);
 const PROPERTY_ID = process.env.GA_PROPERTY_ID || "504891179";
 const CACHE_TTL_SECONDS = parseInt(process.env.GA_CACHE_TTL || "60", 10); // كاش عام (60s)
 
 // ==== عميل Google Analytics Data API ====
+/*
 const analytics = new BetaAnalyticsDataClient({
   keyFilename: KEYFILE_PATH,
+});*/
+
+const analytics = new BetaAnalyticsDataClient({
+  credentials: {
+    client_email: serviceAccount.client_email,
+    private_key: serviceAccount.private_key,
+  },
 });
 
 // ==== كاش بسيط في الذاكرة ====
@@ -190,6 +200,8 @@ router.get("/realtime-active-users", authAdminMiddleware, async (req, res) => {
 
 
 module.exports = router;
+
+
 
 
 
