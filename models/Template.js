@@ -7,7 +7,9 @@ const TemplateSchema = new mongoose.Schema({
   category: { type: String, index: true, default: "general" },
   tags: { type: [String], default: [] },
   thumbnailUrl: { type: String, default: "" },
-  jsonUrl: { type: String, required: true }, // رابط ملف JSON (S3 أو محلي)
+  //jsonUrl: { type: String, required: true }, // رابط ملف JSON (S3 أو محلي)
+   // ⭐ هنا التغيير المهم
+  schema: { type: mongoose.Schema.Types.Mixed, required: true },
   tier: { type: String, enum: ["basic", "pro", "premium"], default: "basic" },
   meta: { type: mongoose.Schema.Types.Mixed, default: {} },
   isPublished: { type: Boolean, default: true },

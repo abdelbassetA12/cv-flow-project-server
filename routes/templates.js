@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
@@ -20,199 +13,118 @@ const UserTemplate = require('../models/UserTemplate');
 
 const router = express.Router();
 
-
 const { v2: cloudinary } = require("cloudinary");
-
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-
-
-
-
-
-
+// Subscription tiers
 const plansRank = { basic: 0, pro: 1, premium: 2 };
-
 function canAccessTier(userPlan, requiredTier) {
   const userRank = plansRank[(userPlan || "basic").toLowerCase()] ?? 0;
   const requiredRank = plansRank[(requiredTier || "basic").toLowerCase()] ?? 0;
   return userRank >= requiredRank;
 }
 
+// Ensure temp folder exists
+const tempDir = "uploads/temp";
+if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
 
-
-
-
-
-
-
-
-
-// إعداد multer
+// Multer setup
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/temp"),
+  destination: (req, file, cb) => cb(null, tempDir),
   filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
 });
-/*
-const upload = multer({ storage });
-*/
+
 const upload = multer({
   storage,
-  limits: { fileSize: 3 * 1024 * 1024 }, // الحد الأقصى 3MB
+  limits: { fileSize: 3 * 1024 * 1024 }, // 3MB
   fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|json/;
     const ext = path.extname(file.originalname).toLowerCase();
-    const mime = file.mimetype;
-
-    if (allowedTypes.test(ext) && allowedTypes.test(mime)) {
+    if (
+      file.mimetype.startsWith("image/") ||
+      file.mimetype === "application/json" ||
+      ext === ".json"
+    ) {
       cb(null, true);
     } else {
-      cb(new Error('❌ نوع الملف غير مسموح. يُسمح فقط بـ JPG أو PNG'));
+      cb(new Error("❌ نوع الملف غير مسموح. يُسمح فقط بـ JPG أو PNG أو JSON"));
     }
   }
 });
 
-
-
-// -----------------
-// Admin: إضافة قالب جديد رفع كامل محلي
-// -----------------
-/*
-router.post("/add", authAdminMiddleware, upload.fields([
-  { name: "jsonFile", maxCount: 1 },
-  { name: "thumbnail", maxCount: 1 }
-]), async (req, res) => {
-  try {
-    const { name, description, category, tags = "", tier = "basic", jsonData } = req.body;
-    const tagsArr = tags ? tags.split(",").map(t => t.trim()).filter(Boolean) : [];
-
-    const id = uuidv4();
-    const targetDir = path.join("uploads", "templates", id);
-    fs.mkdirSync(targetDir, { recursive: true });
-
-    let jsonPath;
-    if (req.files?.jsonFile?.length > 0) {
-      const tmpPath = req.files.jsonFile[0].path;
-      jsonPath = path.join(targetDir, "template.json");
-      fs.renameSync(tmpPath, jsonPath);
-    } else if (jsonData) {
-      jsonPath = path.join(targetDir, "template.json");
-      const parsed = typeof jsonData === "string" ? JSON.parse(jsonData) : jsonData;
-      fs.writeFileSync(jsonPath, JSON.stringify(parsed, null, 2));
-    } else {
-      return res.status(400).json({ message: "No template JSON provided." });
-    }
-
-    let thumbUrl = "";
-    if (req.files?.thumbnail?.length > 0) {
-      const tmpThumb = req.files.thumbnail[0].path;
-      const destThumb = path.join(targetDir, "thumb" + path.extname(req.files.thumbnail[0].originalname));
-      fs.renameSync(tmpThumb, destThumb);
-      thumbUrl = `/${destThumb.replace(/\\/g, "/")}`;
-    }
-
-    const slug = slugify(name, { lower: true, strict: true }) + "-" + id.slice(0, 6);
-
-    const templateDoc = await Template.create({
-      name,
-      slug,
-      description,
-      category,
-      tags: tagsArr,
-      thumbnailUrl: thumbUrl,
-      jsonUrl: `/${jsonPath.replace(/\\/g, "/")}`,
-      tier, // يمكنك ترك tier إذا أردت فقط للتصنيف
-      createdBy: req.admin.id
-    });
-
-    res.status(201).json({ success: true, template: templateDoc });
-  } catch (err) {
-    console.error("Error adding template:", err);
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-*/
 // -----------------
 // Admin: إضافة قالب جديد
 // -----------------
-router.post("/add", authAdminMiddleware, upload.fields([
-  { name: "jsonFile", maxCount: 1 },
-  { name: "thumbnail", maxCount: 1 }
-]), async (req, res) => {
-  try {
-    const { name, description, category, tags = "", tier = "basic", jsonData } = req.body;
-    const tagsArr = tags ? tags.split(",").map(t => t.trim()).filter(Boolean) : [];
+router.post(
+  "/add",
+  authAdminMiddleware,
+  upload.fields([
+    { name: "jsonFile", maxCount: 1 },
+    { name: "thumbnail", maxCount: 1 }
+  ]),
+  async (req, res) => {
+    try {
+      const { name, description, category, tags = "", tier = "basic" } = req.body;
+      if (!name) return res.status(400).json({ message: "Name is required" });
 
-    const id = uuidv4();
-    const targetDir = path.join("uploads", "templates", id);
-    fs.mkdirSync(targetDir, { recursive: true });
+      // Tags
+      const tagsArr = tags.split(",").map(t => t.trim()).filter(Boolean);
 
-    // -----------------------------
-    // حفظ JSON كما هو (لا تغيير)
-    // -----------------------------
-    let jsonPath;
-    if (req.files?.jsonFile?.length > 0) {
-      const tmpPath = req.files.jsonFile[0].path;
-      jsonPath = path.join(targetDir, "template.json");
-      fs.renameSync(tmpPath, jsonPath);
-    } else if (jsonData) {
-      jsonPath = path.join(targetDir, "template.json");
-      const parsed = typeof jsonData === "string" ? JSON.parse(jsonData) : jsonData;
-      fs.writeFileSync(jsonPath, JSON.stringify(parsed, null, 2));
-    } else {
-      return res.status(400).json({ message: "No template JSON provided." });
-    }
+      // JSON
+      if (!req.files?.jsonFile?.length) return res.status(400).json({ message: "JSON file is required" });
+      const raw = fs.readFileSync(req.files.jsonFile[0].path, "utf-8");
+      let schema;
+      try {
+        schema = JSON.parse(raw);
+      } catch (e) {
+        fs.unlinkSync(req.files.jsonFile[0].path);
+        return res.status(400).json({ message: "Invalid JSON file" });
+      }
+      fs.unlinkSync(req.files.jsonFile[0].path);
 
-    // -----------------------------
-    // رفع Thumbnail إلى Cloudinary
-    // -----------------------------
-    let thumbUrl = "";
+      // Thumbnail
+      let thumbnailUrl = "";
+      if (req.files?.thumbnail?.length) {
+        const uploadRes = await cloudinary.uploader.upload(
+          req.files.thumbnail[0].path,
+          { folder: "templates" }
+        );
+        thumbnailUrl = uploadRes.secure_url;
+        fs.unlinkSync(req.files.thumbnail[0].path);
+      }
 
-    if (req.files?.thumbnail?.length > 0) {
-      const tmpThumb = req.files.thumbnail[0].path;
+      // Slug
+      const slug = slugify(name, { lower: true, strict: true }) + "-" + uuidv4().slice(0, 6);
 
-      const uploadRes = await cloudinary.uploader.upload(tmpThumb, {
-        folder: `templates/${id}`,
-        resource_type: "image"
+      // Save to DB
+      const template = await Template.create({
+        name,
+        slug,
+        description,
+        category,
+        tags: tagsArr,
+        tier,
+        thumbnailUrl,
+        schema,
+        createdBy: req.admin.id
       });
 
-      thumbUrl = uploadRes.secure_url;
+      res.status(201).json({ success: true, template });
 
-      // حذف الملف المؤقت
-      fs.unlinkSync(tmpThumb);
+    } catch (err) {
+      console.error("Add template error:", err);
+      res.status(500).json({ success: false, message: err.message });
     }
-
-    const slug = slugify(name, { lower: true, strict: true }) + "-" + id.slice(0, 6);
-
-    const templateDoc = await Template.create({
-      name,
-      slug,
-      description,
-      category,
-      tags: tagsArr,
-      thumbnailUrl: thumbUrl,      // ← الآن URL Cloudinary
-      jsonUrl: `/${jsonPath.replace(/\\/g, "/")}`,   // JSON يبقى محلي
-      tier,
-      createdBy: req.admin.id
-    });
-
-    res.status(201).json({ success: true, template: templateDoc });
-
-  } catch (err) {
-    console.error("Error adding template:", err);
-    res.status(500).json({ success: false, message: err.message });
   }
-});
-
+);
 
 // -----------------
-// جلب جميع القوالب
+// Get all templates
 // -----------------
-router.get("/",  async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const { category, q, page = 1, limit = 30 } = req.query;
     const filter = { isPublished: true };
@@ -233,18 +145,15 @@ router.get("/",  async (req, res) => {
 });
 
 // -----------------
-// جلب قالب حسب slug (بدون تحقق من الخطة)
+// Get template by slug
 // -----------------
-
 router.get("/:slug", authMiddleware, async (req, res) => {
   try {
     const t = await Template.findOne({ slug: req.params.slug }).lean();
     if (!t) return res.status(404).json({ message: "Not found" });
-
     if (!canAccessTier(req.user.subscriptionPlan, t.tier)) {
       return res.status(403).json({ message: `هذا القالب يتطلب خطة ${t.tier} أو أعلى` });
     }
-
     res.json({ success: true, template: t });
   } catch (err) {
     console.error(err);
@@ -252,46 +161,22 @@ router.get("/:slug", authMiddleware, async (req, res) => {
   }
 });
 
-/*
-router.get("/:slug", authMiddleware, async (req, res) => {
-  try {
-    const t = await Template.findOne({ slug: req.params.slug }).lean();
-    if (!t) return res.status(404).json({ message: "Not found" });
-
-    res.json({ success: true, template: t });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: err.message });
-  }
-});
-*/
-
-
 // -----------------
-// نسخ قالب لمستخدم (بدون تحقق من الخطة)
+// Clone template for user
 // -----------------
-
-
 router.post("/:slug/clone", authMiddleware, async (req, res) => {
   try {
     const template = await Template.findOne({ slug: req.params.slug }).lean();
     if (!template) return res.status(404).json({ message: "Not found" });
-
     if (!canAccessTier(req.user.subscriptionPlan, template.tier)) {
       return res.status(403).json({ message: `هذا القالب يتطلب خطة ${template.tier} أو أعلى` });
     }
-
-    const jsonPath = path.join(process.cwd(), template.jsonUrl);
-    if (!fs.existsSync(jsonPath)) {
-      return res.status(500).json({ message: "Template JSON not found on server." });
-    }
-    const jsonContent = JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
 
     const userTpl = await UserTemplate.create({
       userId: req.user.id,
       originalTemplateId: template._id,
       name: `${template.name} (Copy)`,
-      json: jsonContent,
+      json: template.schema,
       assets: template.meta?.assets || []
     });
 
@@ -302,11 +187,8 @@ router.post("/:slug/clone", authMiddleware, async (req, res) => {
   }
 });
 
-
-
-
 // -----------------
-// حفظ قالب المستخدم
+// Save user template
 // -----------------
 router.post("/user/save", authMiddleware, async (req, res) => {
   try {
